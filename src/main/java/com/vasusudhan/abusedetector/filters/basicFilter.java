@@ -20,6 +20,7 @@ public class basicFilter implements Filter{
     private countBean CountBean;
     @Autowired
     private inMem currmodule;
+    private static Logger logger = LoggerFactory.getLogger(basicFilter.class);
     private requestTemplate handleRequest(HttpServletRequest request){
         return new requestTemplate(request.getRemoteAddr(),request.getMethod(),request.getRequestURI());
     }
@@ -29,8 +30,8 @@ public class basicFilter implements Filter{
         System.out.println("Request Address: "+request.getRemoteAddr());
         System.out.println("Host Address: "+request.getRemoteHost());
         requestTemplate details=handleRequest((HttpServletRequest)request);
-        currmodule.addtoMem(details.getIPaddress());
-        System.out.println("Current Module: "+currmodule.getValue(details.getIPaddress()));
+        currmodule.addtoMemnew(details);
+        System.out.println("Current Request: "+details.getIPaddress()+" "+currmodule.getValue(details.getIPaddress()).getCount());
         chain.doFilter(request,response);
     }
 }
