@@ -1,24 +1,25 @@
 package com.vasusudhan.abusedetector.storageclasses;
 
+import com.vasusudhan.abusedetector.templates.ratelimitState;
 import com.vasusudhan.abusedetector.templates.requestTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class inMem {
-    HashMap<String,requestTemplate> map=new HashMap<>();
-    public void addtoMemnew(requestTemplate request){
-       if(map.get(request.getIPaddress())==null){
-           map.put(request.getIPaddress(),request);
-       }
-       else{
-           request.setCount(new AtomicInteger(request.getCount().addAndGet(1)));
-           map.put(request.getIPaddress(),request);
-       }
+    private final ConcurrentHashMap<String, ratelimitState> map = new ConcurrentHashMap<>();
+
+    public void addtoMemnew(requestTemplate request) {
+        String key=request.getIPaddress()+"|"+request.getUrl();
+        ratelimitState state=map.computeIfAbsent(key,k-> new ratelimitState());
+        state.incrementCount();
+        state.setDateTime(System.currentTimeMillis());
     }
-    public requestTemplate getValue(String address){
-        return map.get(address);
+
+    public void fetchDetails(requestTemplate details) {
+        String key=details.getIPaddress()+"|"+details.getUrl();
+        ratelimitState state=map.computeIfAbsent(key,k-> new ratelimitState());
+        System.out.println(details.getIPaddress()+" "+details.getUrl()+" "+details.getRequestType()+" "+state.getCount());
     }
 }

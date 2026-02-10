@@ -17,5 +17,7 @@ public class helloController {
     public AtomicInteger helloReturner(){
         return basicService.returnHello();
     }
+    @GetMapping("/home")
+    public String homeReturner(){return "Welcome to world";}
 }
 

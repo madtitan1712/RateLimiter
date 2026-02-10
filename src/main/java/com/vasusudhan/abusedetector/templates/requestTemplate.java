@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.concurrent.atomic.AtomicInteger;
 @Data
 public class requestTemplate {
-    private AtomicInteger count = new AtomicInteger(0);
+    private AtomicInteger count = new AtomicInteger(1);
     private String IPaddress;
     private String RequestType;
     private String Url;
