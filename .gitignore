@@ -34,3 +34,4 @@ build/
 app.log
 README.md
 projectSpec.md
+*.gz
