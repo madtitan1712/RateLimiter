@@ -27,5 +27,13 @@ public class ratelimitState {
     public Deque<Long> getDateTime(){
         return DateTime;
     }
+    public void clearOldTimestamps(long windowMS){
+        long currMS=System.currentTimeMillis();
+        DateTime.removeIf(k-> k<currMS-windowMS);
+    }
+    public long requestCount(long windowMS){
+        clearOldTimestamps(windowMS);
+        return DateTime.size();
+    }
 }
 

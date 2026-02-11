@@ -17,9 +17,18 @@ public class inMem {
         state.setDateTime(System.currentTimeMillis());
     }
 
-    public void fetchDetails(requestTemplate details) {
-        String key=details.getIPaddress()+"|"+details.getUrl();
-        ratelimitState state=map.computeIfAbsent(key,k-> new ratelimitState());
-        System.out.println(details.getIPaddress()+" "+details.getUrl()+" "+details.getRequestType()+" "+state.getCount());
+    public ratelimitState fetchDetails(String Ip,String Url) {
+        String key=Ip+"|"+Url;
+        return map.computeIfAbsent(key,k-> new ratelimitState());
+    }
+
+    public synchronized boolean checkAndAdd(String ip, String endpoint, long maxRequests, long windowMs) {
+        String key = ip + "|" + endpoint;
+        ratelimitState state = map.computeIfAbsent(key, k -> new ratelimitState());
+        if (state.requestCount(windowMs) >= maxRequests) {
+            return false;
+        }
+        state.setDateTime(System.currentTimeMillis());
+        return true;
     }
 }
