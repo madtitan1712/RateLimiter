@@ -31,10 +31,5 @@ public class helloController {
                 "events", events
         );
     }
-    @GetMapping("/debug/events/clear")
-    public String clearEvents() {
-        // Note: You'll need to add this method to RequestEventQueue
-        return "Manual clear not implemented yet";
-    }
 }
 
